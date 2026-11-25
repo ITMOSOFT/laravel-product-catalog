@@ -2,13 +2,10 @@
 
 namespace ItmoSoft\ProductCatalog\Tests\Feature;
 
-use Illuminate\Database\QueryException;
 use ItmoSoft\ProductCatalog\Models\Attribute;
-use ItmoSoft\ProductCatalog\Models\AttributeValue;
 use ItmoSoft\ProductCatalog\Models\Brand;
 use ItmoSoft\ProductCatalog\Models\Category;
 use ItmoSoft\ProductCatalog\Models\Product;
-use ItmoSoft\ProductCatalog\Models\ProductVariant;
 use ItmoSoft\ProductCatalog\Tests\TestCase;
 
 class ProductCatalogTest extends TestCase
@@ -82,16 +79,20 @@ class ProductCatalogTest extends TestCase
         $this->assertCount(1, $product->attributeValues);
     }
 
-    public function test_variant_can_be_attached_to_attribute_value(): void
+    public function test_variant_can_attach_attribute_values_and_populates_product_id(): void
     {
         $product = Product::create(['name' => 'T-Shirt']);
         $variant = $product->variants()->create(['sku' => 'TS-RED-M', 'price' => 15]);
         $attribute = Attribute::create(['name' => 'Color']);
         $value = $attribute->values()->create(['value' => 'Red', 'slug' => 'red']);
 
-        $product->attributeValues()->attach($value->id, ['product_variant_id' => $variant->id]);
+        $variant->attributeValues()->attach($value->id);
 
-        $this->assertSame($variant->id, $product->attributeValues()->first()->pivot->product_variant_id);
+        $pivot = $variant->attributeValues()->firstOrFail()->pivot;
+
+        $this->assertSame($value->id, $pivot->attribute_value_id);
+        $this->assertSame($product->id, $pivot->product_id);
+        $this->assertSame($variant->id, $pivot->product_variant_id);
     }
 
     public function test_product_metadata_is_cast_to_array(): void

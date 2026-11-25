@@ -35,6 +35,9 @@ class ProductVariant extends Model
         return $this->belongsToMany(
             config('product-catalog.models.attribute_value', AttributeValue::class),
             config('product-catalog.table_prefix', 'catalog_').'product_attribute_value'
-        )->withPivot('product_id')->withTimestamps();
+        )
+            ->withPivot('product_id')
+            ->withPivotValue('product_id', $this->product_id)
+            ->withTimestamps();
     }
 }

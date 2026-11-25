@@ -36,7 +36,6 @@ use ItmoSoft\ProductCatalog\Models\Category;
 use ItmoSoft\ProductCatalog\Models\Brand;
 
 $brand = Brand::create(['name' => 'Acme']);
-
 $category = Category::create(['name' => 'Accessories']);
 
 $product = Product::create([
@@ -56,6 +55,8 @@ Slugs are generated from `name` when a model is created and no slug is supplied.
 ## Variants and attributes
 
 ```php
+use ItmoSoft\ProductCatalog\Models\Attribute;
+
 $color = Attribute::create([
     'name' => 'Color',
     'type' => 'select',
@@ -74,9 +75,13 @@ $variant = $product->variants()->create([
     'compare_at_price' => 59.99,
 ]);
 
-$product->attributeValues()->attach($red->id, [
-    'product_variant_id' => $variant->id,
-]);
+// Attach an attribute value to the product itself.
+$product->attributeValues()->attach($red->id);
+
+// Or attach it to a specific variant. The relationship supplies product_id
+// automatically because the pivot table requires both product_id and
+// product_variant_id.
+$variant->attributeValues()->attach($red->id);
 ```
 
 ## Configuration
