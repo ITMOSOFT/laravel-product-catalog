@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## [1.0.2] - Unreleased
+
+- Fixed MySQL migration failure caused by automatically generated index names exceeding the 64-character identifier limit.
+- Added explicit, MySQL-safe index names for product attribute value relationships.
+- Added a regression test verifying the product attribute value index names and their lengths.
+
 ## [1.0.1] - Unreleased
 
 - Fixed variant-to-attribute-value attachment so the required `product_id` pivot column is populated automatically.

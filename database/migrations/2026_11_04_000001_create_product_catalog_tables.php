@@ -96,8 +96,15 @@ return new class extends Migration
             $table->foreignId('attribute_value_id')->constrained($prefix.'attribute_values')->cascadeOnDelete();
             $table->foreignId('product_variant_id')->nullable()->constrained($prefix.'product_variants')->cascadeOnDelete();
             $table->timestamps();
-            $table->index(['product_id', 'attribute_value_id']);
-            $table->index(['product_variant_id']);
+            $table->index(
+                ['product_id', 'attribute_value_id'],
+                'cat_pav_product_attribute_idx'
+            );
+
+            $table->index(
+                ['product_variant_id'],
+                'cat_pav_variant_idx'
+            );
         });
     }
 
